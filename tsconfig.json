@@ -1,0 +1,16 @@
+{
+  "files" : [
+    "src/dgluxjs/dgluxjs.ts",
+    "src/example/example.ts",
+    "typings/index.d.ts"
+  ],
+  "compilerOptions": {
+    "module": "system",
+    "target": "es5",
+    "noImplicitAny": true,
+    "sourceMap": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

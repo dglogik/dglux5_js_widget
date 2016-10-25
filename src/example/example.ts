@@ -1,0 +1,1 @@
+/// <reference path="example_widget.ts" />

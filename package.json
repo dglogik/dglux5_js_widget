@@ -1,0 +1,24 @@
+{
+  "name": "dglux5_js_widget",
+  "version": "0.0.1",
+  "description": "dglux5 js widget template",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dglogik/dglux5_js_widget/dglux5_js_widget.git"
+  },
+  "author": {
+    "name": "Rick Zhou",
+    "email": "rinick@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3",
+    "ts-module-opt": "^0.1.5"
+  },
+  "scripts": {
+    "test": "mocha test",
+    "postinstall": "node node_modules/ts-module-opt/bin/run.js -d -t es5 src/dgluxjs src/example"
+  }
+}
