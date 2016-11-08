@@ -19,6 +19,7 @@
   },
   "scripts": {
     "test": "mocha test",
-    "postinstall": "node node_modules/ts-module-opt/bin/run.js -d -t es5 src/dgluxjs src/example"
+    "postinstall": "node node_modules/ts-module-opt/bin/run.js -d -t es5 src/dgluxjs src/example",
+    "to_dart" :"dart_js_facade_gen src/dgluxjs/dgluxjs.d.ts > src/dgluxjs/dgluxjs_d.dart"
   }
 }

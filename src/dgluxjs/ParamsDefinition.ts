@@ -24,7 +24,7 @@ module dgluxjs {
 
     export interface ParamsDefinition {
         name: string;
-        "!var": ParamDefinition[];
-        "!layout": LayoutDefinition;
+        variables: ParamDefinition[];
+        layout: LayoutDefinition;
     }
 }
