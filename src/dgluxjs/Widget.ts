@@ -21,6 +21,14 @@ module dgluxjs {
         return result;
     }
 
+    export function getTableRows(value: any): Array<Array<any>> {
+        return getDgTableRows(value);
+    }
+
+    export function getTableColumns(value: any): Array<string> {
+        return getDgTableColumns(value);
+    }
+
     export class Widget {
 
         getDefinition(): ParamsDefinition {
