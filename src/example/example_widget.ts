@@ -15,10 +15,10 @@ module example {
         getDefinition(): dgluxjs.ParamsDefinition {
             return {
                 "name": "",
-                "variables": [{"t": "string", "n": "colorStr"}],
+                "variables": [{"t": "string", "n": "colorStr"}, {"t": "tabledata", "n": "table"}],
                 "layout": {
                     "type": "vbox",
-                    "children": ["colorStr"]
+                    "children": ["colorStr", "table"]
                 }
             };
         };
@@ -33,5 +33,8 @@ module example {
             return ExampleWidget._blankPropMap;
         }
     }
-    dgluxjs.registerWidget('example', ExampleWidget);
+
+    export function create(div: HTMLDivElement): dgluxjs.Widget {
+        return new ExampleWidget(div);
+    }
 }

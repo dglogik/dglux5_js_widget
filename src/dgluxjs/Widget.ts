@@ -1,11 +1,25 @@
 module dgluxjs {
-    let onAddWidget: (type: string)=> void;
-
     let getDgModelValue: (model: any, field: string)=> any;
 
     let setDgModelValue: (model: any, field: string, value: any)=> void;
 
     let updateDgModelValue: (model: any, field: string, value: any)=> void;
+
+    let getDgTableRows: (table: any)=> Array<Array<any>>;
+
+    let getDgTableColumns: (table: any)=> Array<string>;
+
+    let getDgObjectType: (value: any) => string;
+
+    export function getObjectType(value: any): string {
+        let result = typeof value;
+        if (result == 'object') {
+            if (getDgObjectType != null) {
+                return getDgObjectType(value);
+            }
+        }
+        return result;
+    }
 
     export class Widget {
 
@@ -74,31 +88,32 @@ module dgluxjs {
 
     export type WidgetType = new (div: HTMLDivElement)=>Widget;
 
-    let dgJsWidgets: {[s: string]: WidgetType} = {};
-
-    export function registerWidget(typeId: string, widgetType: WidgetType) {
-        dgJsWidgets[typeId] = widgetType;
-        if (onAddWidget != null) {
-            onAddWidget(typeId);
-        }
-    }
-
-    export function setDgJsCallback(onAddWidgetCallback: any,
+    export function setDgJsCallback(requireCallback: any,
+                                    defineCallback: any,
                                     getModelValueCallback: any,
                                     setModelValueCallback: any,
-                                    updateModelValueCallback: any): void {
-        onAddWidget = onAddWidgetCallback;
+                                    updateModelValueCallback: any,
+                                    getTableRowsCallback: any,
+                                    getTableColumnsCallback: any,
+                                    getObjectTypeCallback: any): void {
+        (window as any)['require'] = requireCallback;
+        (window as any)['define'] = defineCallback;
         getDgModelValue = getModelValueCallback;
         setDgModelValue = setModelValueCallback;
         updateDgModelValue = updateModelValueCallback;
-        for (let name in dgJsWidgets) {
-            onAddWidget(name);
-        }
+        getDgTableRows = getTableRowsCallback;
+        getDgTableColumns = getTableColumnsCallback;
+        getDgObjectType = getObjectTypeCallback;
+
     }
 
-    export function newDgJsWidget(typeId: string, div: HTMLDivElement): Widget {
-        if (dgJsWidgets.hasOwnProperty(typeId)) {
-            return new dgJsWidgets[typeId](div);
+    export function callJsFunction(func: any, args: any[]): any {
+        return (func as (...args: any[])=>any).call(null, args);
+    }
+
+    export function newDgJsWidget(module: any, div: HTMLDivElement): Widget {
+        if (module.hasOwnProperty("create")) {
+            return module["create"](div);
         }
         return null;
     }
