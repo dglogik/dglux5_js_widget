@@ -5,6 +5,7 @@ module dgluxjs {
     let updateDgModelTable: (model: any, field: string, columns: Array<string>, rows: Array<Array<any>>)=> void;
     let getDgTableRows: (table: any)=> Array<Array<any>>;
     let getDgTableColumns: (table: any)=> Array<string>;
+    let getDgResourceUrl: (model: any, string: any)=> string;
     let getDgObjectType: (value: any) => string;
 
     export function getObjectType(value: any): string {
@@ -41,8 +42,9 @@ module dgluxjs {
         _model: any;
         parentDiv: HTMLDivElement;
 
-        constructor(div: HTMLDivElement) {
+        constructor(div: HTMLDivElement, model: any) {
             this.parentDiv = div;
+            this._model = model;
         }
 
         setModel(model: any): void {
@@ -63,6 +65,10 @@ module dgluxjs {
 
         updateModelTable(field: string, columns: Array<string>, rows: Array<Array<any>>): void {
             updateDgModelTable(this._model, field, columns, rows);
+        }
+
+        getResourceUrl(value: string): string {
+            return getDgResourceUrl(this._model, value);
         }
 
         static _blankPropMap: {[s: string]: (widget: Widget, value: any)=>void} = {};
@@ -94,6 +100,8 @@ module dgluxjs {
 
         }
 
+        destroyed: boolean = false;
+
         destroy(): void {
 
         }
@@ -109,26 +117,28 @@ module dgluxjs {
                                     updateModelTableCallback: any,
                                     getTableRowsCallback: any,
                                     getTableColumnsCallback: any,
+                                    getResourceUrlCallback: any,
                                     getObjectTypeCallback: any): void {
         (window as any)['require'] = requireCallback;
         (window as any)['define'] = defineCallback;
         getDgModelValue = getModelValueCallback;
         setDgModelValue = setModelValueCallback;
         updateDgModelValue = updateModelValueCallback;
-        updateDgModelTable = updateModelTableCallback
+        updateDgModelTable = updateModelTableCallback;
         getDgTableRows = getTableRowsCallback;
         getDgTableColumns = getTableColumnsCallback;
+        getDgResourceUrl = getResourceUrlCallback;
         getDgObjectType = getObjectTypeCallback;
 
     }
 
     export function callJsFunction(func: any, args: any[]): any {
-        return (func as (...args: any[])=>any).call(null, args);
+        return (func as (...args: any[])=>any).apply(null, args);
     }
 
-    export function newDgJsWidget(module: any, div: HTMLDivElement): Widget {
-        if (module.hasOwnProperty("dgNew")) {
-            return module["dgNew"](div);
+    export function newDgJsWidget(module: any, div: HTMLDivElement, model: any): Widget {
+        if (module.hasOwnProperty("dgNewWidget")) {
+            return module["dgNewWidget"](div, model);
         }
         return null;
     }

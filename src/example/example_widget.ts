@@ -4,8 +4,8 @@ module example {
 
         contentDiv: HTMLDivElement;
 
-        constructor(div: HTMLDivElement) {
-            super(div);
+        constructor(div: HTMLDivElement, model:any) {
+            super(div, model);
             this.contentDiv = document.createElement('div');
             this.contentDiv.style.width = "100%";
             this.contentDiv.style.height = "100%";
@@ -34,7 +34,7 @@ module example {
         }
     }
 
-    export function create(div: HTMLDivElement): dgluxjs.Widget {
-        return new ExampleWidget(div);
+    export function dgNewWidget(div: HTMLDivElement, model:any): dgluxjs.Widget {
+        return new ExampleWidget(div, model);
     }
 }
