@@ -24,6 +24,7 @@ module dgluxjs {
 
     export interface ParamsDefinition {
         name: string;
+        size?: "auto" | "sensor";
         variables: ParamDefinition[];
         layout: LayoutDefinition;
     }

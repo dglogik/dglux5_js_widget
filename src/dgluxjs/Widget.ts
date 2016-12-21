@@ -1,14 +1,10 @@
 module dgluxjs {
     let getDgModelValue: (model: any, field: string)=> any;
-
     let setDgModelValue: (model: any, field: string, value: any)=> void;
-
     let updateDgModelValue: (model: any, field: string, value: any)=> void;
-
+    let updateDgModelTable: (model: any, field: string, columns: Array<string>, rows: Array<Array<any>>)=> void;
     let getDgTableRows: (table: any)=> Array<Array<any>>;
-
     let getDgTableColumns: (table: any)=> Array<string>;
-
     let getDgObjectType: (value: any) => string;
 
     export function getObjectType(value: any): string {
@@ -31,7 +27,7 @@ module dgluxjs {
 
     export class Widget {
 
-        getDefinition(): ParamsDefinition {
+        getDefinition(): dgluxjs.ParamsDefinition {
             return {
                 "name": "",
                 "variables": [],
@@ -65,6 +61,10 @@ module dgluxjs {
             updateDgModelValue(this._model, field, value);
         }
 
+        updateModelTable(field: string, columns: Array<string>, rows: Array<Array<any>>): void {
+            updateDgModelTable(this._model, field, columns, rows);
+        }
+
         static _blankPropMap: {[s: string]: (widget: Widget, value: any)=>void} = {};
 
         getPropMap(): {[s: string]: (widget: Widget, value: any)=>void} {
@@ -89,6 +89,11 @@ module dgluxjs {
             }
         }
 
+        /* will be called when definition.size == 'sensor' */
+        onResize(): void {
+
+        }
+
         destroy(): void {
 
         }
@@ -101,6 +106,7 @@ module dgluxjs {
                                     getModelValueCallback: any,
                                     setModelValueCallback: any,
                                     updateModelValueCallback: any,
+                                    updateModelTableCallback: any,
                                     getTableRowsCallback: any,
                                     getTableColumnsCallback: any,
                                     getObjectTypeCallback: any): void {
@@ -109,6 +115,7 @@ module dgluxjs {
         getDgModelValue = getModelValueCallback;
         setDgModelValue = setModelValueCallback;
         updateDgModelValue = updateModelValueCallback;
+        updateDgModelTable = updateModelTableCallback
         getDgTableRows = getTableRowsCallback;
         getDgTableColumns = getTableColumnsCallback;
         getDgObjectType = getObjectTypeCallback;
@@ -120,8 +127,8 @@ module dgluxjs {
     }
 
     export function newDgJsWidget(module: any, div: HTMLDivElement): Widget {
-        if (module.hasOwnProperty("create")) {
-            return module["create"](div);
+        if (module.hasOwnProperty("dgNew")) {
+            return module["dgNew"](div);
         }
         return null;
     }
