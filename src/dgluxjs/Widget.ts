@@ -1,11 +1,12 @@
 module dgluxjs {
-    let getDgModelValue: (model: any, field: string)=> any;
-    let setDgModelValue: (model: any, field: string, value: any)=> void;
-    let updateDgModelValue: (model: any, field: string, value: any)=> void;
-    let updateDgModelTable: (model: any, field: string, columns: Array<string>, rows: Array<Array<any>>)=> void;
-    let getDgTableRows: (table: any)=> Array<Array<any>>;
-    let getDgTableColumns: (table: any)=> Array<string>;
-    let getDgResourceUrl: (model: any, string: any)=> string;
+
+    let getDgModelValue: (model: any, field: string) => any;
+    let setDgModelValue: (model: any, field: string, value: any) => void;
+    let updateDgModelValue: (model: any, field: string, value: any) => void;
+    let updateDgModelTable: (model: any, field: string, columns: Array<string>, rows: Array<Array<any>>) => void;
+    let getDgTableRows: (table: any) => Array<Array<any>>;
+    let getDgTableColumns: (table: any) => Array<string>;
+    let getDgResourceUrl: (model: any, string: any) => string;
     let getDgObjectType: (value: any) => string;
 
     export function getObjectType(value: any): string {
@@ -24,6 +25,23 @@ module dgluxjs {
 
     export function getTableColumns(value: any): Array<string> {
         return getDgTableColumns(value);
+    }
+
+    export function updateStorage(key: string, value: string, session: boolean): void {
+        let storage: Storage;
+        if (session) {
+            storage = window.sessionStorage;
+            key = 'dgs::' + key;
+        } else {
+            storage = window.localStorage;
+            key = 'dg::' + key;
+        }
+        let oldVal: String = storage[key];
+        storage[key] = value;
+
+        let se: any = document.createEvent('StorageEvent');
+        se.initStorageEvent('storage', false, false, key, oldVal, value, '/', storage);
+        window.dispatchEvent(se);
     }
 
     export class Widget {
@@ -71,9 +89,9 @@ module dgluxjs {
             return getDgResourceUrl(this._model, value);
         }
 
-        static _blankPropMap: {[s: string]: (widget: Widget, value: any)=>void} = {};
+        static _blankPropMap: {[s: string]: (widget: Widget, value: any) => void} = {};
 
-        getPropMap(): {[s: string]: (widget: Widget, value: any)=>void} {
+        getPropMap(): {[s: string]: (widget: Widget, value: any) => void} {
             return Widget._blankPropMap;
         }
 
@@ -107,7 +125,7 @@ module dgluxjs {
         }
     }
 
-    export type WidgetType = new (div: HTMLDivElement)=>Widget;
+    export type WidgetType = new (div: HTMLDivElement) => Widget;
 
     export function setDgJsCallback(requireCallback: any,
                                     defineCallback: any,
@@ -133,7 +151,7 @@ module dgluxjs {
     }
 
     export function callJsFunction(func: any, args: any[]): any {
-        return (func as (...args: any[])=>any).apply(null, args);
+        return (func as (...args: any[]) => any).apply(null, args);
     }
 
     export function newDgJsWidget(module: any, div: HTMLDivElement, model: any): Widget {
